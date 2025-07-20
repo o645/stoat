@@ -7,6 +7,7 @@ namespace webServer;
 class Program
 {
     public static bool KILLSWITCH = false;
+    public static string FilePath = "../debugSite";
     static void Main(string[] args)
     {
         Socket server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -46,7 +47,43 @@ public class Connection
             {
                 string request = Encoding.UTF8.GetString(buffer);
                 Console.WriteLine($"{messagePrefix}Received Message: {request}");
+                byte[] response = Encoding.UTF8.GetBytes(ParseRequest(request));
+                socket.Send(response);
+                socket.Close();
             }
         }
+        
+    }
+    
+    public string ParseRequest(string request)
+    {
+        string[] requestParts = request.Split("\n");
+        //type
+        string[] typeParts = requestParts[0].Split(' ');
+        switch (typeParts[0])
+        {
+            case "GET":
+            case "HEAD":
+                return GetRequest(requestParts);
+                break;
+            default:
+                return "HTTP/1.1 501 Not Implemented\n";
+                break;
+        }
+    }
+
+    public string GetRequest(string[] request)
+    {
+        string file = request[0].Split(" ")[1];
+        if (file[^1] == '/')
+        {
+            file += "index.html"; //default directories to their index page.
+        }
+        string path = $"{Program.FilePath}{file}";
+        string[] lines = File.ReadAllLines(path);
+        
+        
+        //future: check actual content type to allow txt etc.
+        return $"HTTP/1.1 200 OK\nServer: Stoat\n\n{string.Join("\n", lines)}";
     }
 }
