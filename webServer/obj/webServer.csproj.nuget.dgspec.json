@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/leo/RiderProjects/webServer/webServer/webServer.csproj": {}
+    "/home/leo/RiderProjects/stoat_server/webServer/webServer.csproj": {}
   },
   "projects": {
-    "/home/leo/RiderProjects/webServer/webServer/webServer.csproj": {
+    "/home/leo/RiderProjects/stoat_server/webServer/webServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/leo/RiderProjects/webServer/webServer/webServer.csproj",
+        "projectUniqueName": "/home/leo/RiderProjects/stoat_server/webServer/webServer.csproj",
         "projectName": "webServer",
-        "projectPath": "/home/leo/RiderProjects/webServer/webServer/webServer.csproj",
+        "projectPath": "/home/leo/RiderProjects/stoat_server/webServer/webServer.csproj",
         "packagesPath": "/root/.nuget/packages/",
-        "outputPath": "/home/leo/RiderProjects/webServer/webServer/obj/",
+        "outputPath": "/home/leo/RiderProjects/stoat_server/webServer/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/root/.nuget/NuGet/NuGet.Config"
