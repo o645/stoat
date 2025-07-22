@@ -1,4 +1,5 @@
 using System.Net.Sockets;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using static webServer.Helper;
 
@@ -7,7 +8,7 @@ namespace webServer;
 /// <summary>
 /// A single connection between server and client.
 /// </summary>
-public class Connection
+public class Connection : IDisposable
 {
 	/// <summary>
 	/// Connection socket.
@@ -50,92 +51,82 @@ public class Connection
 			{
 				string request = Encoding.ASCII.GetString(buffer);
 				Console.WriteLine($"{messagePrefix}Received Message: {request}");
-				SendMessage(ParseRequest(request).ToBytes());
+				Request parsedRequest = new Request(request);
+				SendMessage(HandleRequest(parsedRequest).ToBytes());
+				
 			}
 			else
 			{
-				socket.Close();
+				break;
 			}
 		}
-        
+        Dispose();
 	}
     
 	/// <summary>
 	/// Parse a single request sent to the connection, and responds.
 	/// </summary>
 	/// <param name="request">Request as a string</param>
-	public Response ParseRequest(string request)
+	public Response HandleRequest(Request request)
 	{
-		string[] requestParts = request.Split("\n");
-		//type
-		string[] typeParts = requestParts[0].Split(' ');
-		switch (typeParts[0])
+		switch (request.type)
 		{
-			case "GET":
-			case "HEAD":
-				return GetRequest(requestParts);
+			case RequestType.GET:
+				case RequestType.HEAD:
+				return GetResponse(request);
 			default:
-				return new Response(statusCode.NOT_IMPLEMENTED, null, null);
+				return new Response(statusCode.NOT_IMPLEMENTED);
 		}
 	}
 
-	public Response GetRequest(string[] request)
+	public Response GetResponse(Request request)
 	{
 		Console.WriteLine("GET/HEAD request!");
-		string file = request[0].Split(" ")[1];
+		string file = request.requestedContent;
 		if (file[^1] == '/')
 		{
 			Console.WriteLine("Directory requested, redirecting to index.html");
 			file += "index.html"; //default directories to their index page.
 		}
-		
 		string path = $"{FilePath}{file}";
-		string extension = Path.GetExtension(path);
-		
 		if (!File.Exists(path))
 		{
 			Console.WriteLine($"File not found. Path was {path}");
 			return new Response(statusCode.NOT_FOUND, null, null);
 		}
-	
-		byte[] content;
-		string contentType;
-		switch (extension)
+		int auth = Authentication.CheckIfFileRequiresAuth(path, FilePath);
+		switch (auth)
 		{
-			case ".html":
-				contentType = "text/html";
+			case 0:
+				//not authorized
+				return new Response(statusCode.UNAUTHORIZED, null, null);
+			case -1:
+				//forbidden
+				return new Response(statusCode.FORBIDDEN, null, null);
 				break;
-			case ".css":
-				contentType = "text/css";
-				break;
-			case ".png":
-			case ".webp":
-			case ".jpeg":
-			case ".jpg":
-			case ".bmp":
-			case ".gif":
-				contentType = $"image/{extension.TrimStart('.')}";
-				break;
-			case ".js":
-				contentType = "application/javascript";
-				break;
-			case ".ico":
-				contentType = "image/x-icon";
-				break;
-			default:
-				contentType = "text/plain"; //fallback to just text.
+			case 1:
+				//allowed, so just continue.
 				break;
 		}
-		Console.WriteLine($"Sending {contentType}");
-		content = File.ReadAllBytes(path);
+
+		var content = File.ReadAllBytes(path);
 		Console.WriteLine($"File found! Size is {content.Length} bytes");
+		var contentType = GetContentTypeFromExtension(Path.GetExtension(path));
+		Console.WriteLine($"Content type is {contentType}");
 		return new Response(statusCode.OK, contentType, content);
 	}
-    
+	
+
 	public void SendMessage(byte[] message)
 	{
 		Console.WriteLine($"{messagePrefix}Sending {Encoding.ASCII.GetString(message).Split("\n\n")[0]}");
 		socket.Send(message);
 		socket.Close();
+	}
+
+	public void Dispose()
+	{
+		socket.Close();
+		socket.Dispose();
 	}
 }

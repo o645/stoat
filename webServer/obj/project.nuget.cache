@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "zDS+Pq189p1t3xIstW2hoU8tiLORl/w3PqcmSDfxbN9DcrXwX63cLOyQ7M57OUYR5HP1IzQ/bNmgrH/xtwnd0A==",
+  "dgSpecHash": "F5GaB9w1HOw=",
   "success": true,
   "projectFilePath": "/home/leo/RiderProjects/stoat_server/webServer/webServer.csproj",
   "expectedPackageFiles": [
-    "/root/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.15/microsoft.aspnetcore.app.ref.8.0.15.nupkg.sha512"
+    "/home/leo/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.15/microsoft.aspnetcore.app.ref.8.0.15.nupkg.sha512"
   ],
   "logs": []
 }

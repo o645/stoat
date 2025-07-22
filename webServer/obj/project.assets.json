@@ -8,7 +8,7 @@
     "net8.0": []
   },
   "packageFolders": {
-    "/root/.nuget/packages/": {}
+    "/home/leo/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
@@ -16,11 +16,11 @@
       "projectUniqueName": "/home/leo/RiderProjects/stoat_server/webServer/webServer.csproj",
       "projectName": "webServer",
       "projectPath": "/home/leo/RiderProjects/stoat_server/webServer/webServer.csproj",
-      "packagesPath": "/root/.nuget/packages/",
+      "packagesPath": "/home/leo/.nuget/packages/",
       "outputPath": "/home/leo/RiderProjects/stoat_server/webServer/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/root/.nuget/NuGet/NuGet.Config"
+        "/home/leo/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"

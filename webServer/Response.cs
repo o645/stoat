@@ -23,6 +23,8 @@ public class Response
 		contentType = ContentType;
 		content = Content;
 	}
+	
+	public Response(statusCode Code) => new Response(Code, null, null);
 
 	public byte[] ToBytes()
 	{
