@@ -14,6 +14,8 @@ public static class Authentication
 
 	private static bool CheckIfFileIsInWWW(string requestedPath, string siteRootPath)
 	{
-		return Path.GetFullPath(requestedPath).Contains(siteRootPath);
+		string req = Path.GetFullPath(requestedPath);
+		string site = Path.GetFullPath(siteRootPath);
+		return req.StartsWith(site);
 	}
 }
